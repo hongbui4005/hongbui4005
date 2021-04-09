@@ -1,0 +1,67 @@
+#include<bits/stdc++.h>
+
+using namespace std;
+
+const int oo = 1010;
+
+int a[oo][oo], Right[oo], Left[oo], h[oo][oo], k, n, m, result = -1;
+stack <int> st;
+int main(){
+    cin >> n >> m;
+/*
+    for (int i = 1; i <= n; i++){
+        for (int j = 1; j <= m; j++){
+            cin >> a[i][j];
+        }
+    }
+    for (int i = 1; i<=n; i++) h[0][i]=0; // ngu vcl
+
+    for (int i = 1; i <= n; i++){
+        for (int j = 1; j <= m; j++){
+            if (a[i][j] = 0) h[i][j] = 0;
+            else h[i][j] = h[i-1][j] + 1;
+        }
+    }
+*/
+
+     for (int i=1;i<=n;i=i+1) h[0][i]=0;
+     for (int i=1;i<=n;i=i+1)
+         for (int j=1;j<=m;j=j+1)
+             {
+              scanf("%d",&a[i][j]);
+              if (a[i][j]==0) h[i][j]=0;
+              else h[i][j]=h[i-1][j]+1;
+             }
+
+
+    for (int i = 1; i <= n; i++){
+        st = stack <int> {};
+        for (int j = 1; j <= m; j++){
+            while (!st.empty() && h[i][j] <= h[i][st.top()])
+                st.pop();
+            if (st.empty()) Left[j] = 0;
+            else Left[j] = st.top();
+
+            st.push(j);
+        }
+        st = stack <int> {};
+
+        for (int j = m; j >= 1; j--){
+            while (!st.empty() && h[i][j] <= h[i][st.top()])
+                st.pop();
+            if (st.empty()) Right[j] = m + 1;
+            else Right[j] = st.top();
+
+            st.push(j);
+        }
+            int tmp = -1;
+
+            for (int j = 2; j <= m; j++){
+                if (tmp < h[i][j] * (Right[j] - Left[j] - 1)) tmp = h[i][j] * (Right[j] - Left[j] - 1);
+            }
+
+            if (result < tmp) result = tmp;
+    }
+    cout << result ;
+    return 0;
+}
