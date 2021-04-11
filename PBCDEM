@@ -1,0 +1,50 @@
+#include<bits/stdc++.h>
+
+using namespace std;
+
+const int MAXN = 5001;
+const int INF = 1e9 + 7;
+
+string f[5001][100];
+int n;
+
+string Operator_plus(string a, string b){
+    while (a.length() < b.length()) a = '0' + a;
+    while (b.length() < a.length()) b = '0' + b;
+
+    string c = a;
+    int nho = 0;
+    for (int i = a.length() - 1; i >= 0; i--){
+        int tmp = (a[i] - '0') + (b[i] - '0') + nho;
+        c[i] = (tmp % 10 + '0');
+        nho = tmp / 10;
+    }
+    if (nho) c = '1' + c;
+    return c;
+}
+
+int main(){
+     ios::sync_with_stdio(false); cin.tie(0);
+    cin >> n;
+
+    for (int i = 0; i <= n; i++){
+        for (int j = 0; j <= 100; j++){
+            f[i][j] = "0";
+        }
+    }
+
+    f[0][0] = "1";
+    for (int i = 1; i <= n; i++){
+        for (int j = 1; j <= trunc(sqrt(i*2)) + 1; j++){
+            if (1LL * j * (j + 1) <= 2 * i)
+            f[i][j] = Operator_plus(f[i-j][j], f[i-j][j-1]);
+        }
+    }
+    string ans = "0";
+    for (int i = 2; i <= trunc(sqrt(n*2)) + 1; i++){
+        ans = Operator_plus(ans, f[n][i]);
+    }
+    cout << ans;
+
+    return 0;
+}
